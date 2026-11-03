@@ -1,0 +1,4 @@
+Imagens dos escudos dos times (PNG, JPG ou WEBP, de preferência quadradas).
+O nome do arquivo de cada time fica no campo "arquivo" da lista TIMES, no topo de corrida.js.
+O fundo branco em volta do escudo é removido automaticamente pelo jogo.
+Sem arquivo, o jogo usa um escudo desenhado com as cores e a sigla do time.

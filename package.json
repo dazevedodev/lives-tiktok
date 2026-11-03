@@ -1,0 +1,20 @@
+{
+  "name": "lives-tiktok",
+  "version": "1.0.0",
+  "description": "Galeria de jogos interativos para lives do TikTok",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "teste": "node server.js --teste"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "matter-js": "^0.20.0",
+    "three": "^0.186.1",
+    "tiktok-live-connector": "^2.5.0",
+    "ws": "^8.22.0"
+  }
+}

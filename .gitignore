@@ -1,0 +1,8 @@
+node_modules/
+.claude/
+# @ da conta usada na live (fica só no computador)
+config.json
+# Escudos oficiais dos times são marcas registradas: ficam só no computador.
+# Sem eles, o jogo desenha escudos próprios com as cores e a sigla do time.
+public/jogos/corrida/escudos/*
+!public/jogos/corrida/escudos/COLOQUE-AQUI.txt

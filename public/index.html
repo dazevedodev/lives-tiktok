@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Galeria de Jogos da Live</title>
+<style>
+  :root { --bg: #0d0f1a; --card: #181b2c; --texto: #f2f3f8; --suave: #9aa0bb; --destaque: #ff2d6f; --ok: #2bd67b; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--texto); font-family: system-ui, sans-serif; }
+  main { max-width: 980px; margin: 0 auto; padding: 32px 16px 64px; }
+  h1 { margin: 0 0 4px; font-size: 32px; }
+  .sub { color: var(--suave); margin: 0 0 24px; }
+  .conta { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 16px; margin-bottom: 24px; }
+  #status { padding: 8px 14px; border-radius: 20px; background: var(--card); font-size: 14px; }
+  #form-usuario { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--suave); }
+  #form-usuario div { display: flex; gap: 6px; }
+  #form-usuario input { background: var(--card); border: 1px solid #2f3452; color: var(--texto); padding: 8px 10px; border-radius: 8px; font-size: 15px; width: 200px; }
+  #form-usuario button { background: var(--destaque); color: #fff; border: 0; border-radius: 8px; padding: 0 14px; font-weight: 700; cursor: pointer; }
+  .grade { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+  .jogo { background: var(--card); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 10px; border: 2px solid transparent; }
+  .jogo.pronto { cursor: pointer; transition: transform .15s, border-color .15s; }
+  .jogo.pronto:hover { transform: translateY(-3px); border-color: var(--destaque); }
+  .jogo.breve { opacity: .45; }
+  .emoji { font-size: 40px; }
+  .jogo h2 { margin: 0; font-size: 20px; }
+  .jogo p { margin: 0; color: var(--suave); font-size: 14px; line-height: 1.4; }
+  .jogo ul { margin: 0; padding-left: 18px; font-size: 13px; line-height: 1.6; }
+  .selo { align-self: flex-start; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 10px; background: var(--destaque); }
+  .breve .selo { background: #444; }
+  .dicas { margin-top: 32px; background: var(--card); border-radius: 16px; padding: 20px; font-size: 14px; line-height: 1.7; }
+  .dicas h3 { margin: 0 0 8px; }
+  kbd { background: #2a2e45; padding: 1px 7px; border-radius: 5px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>🎮 Galeria de Jogos da Live</h1>
+  <p class="sub">Escolha o jogo de hoje. Dá pra trocar quando quiser.</p>
+  <div class="conta">
+    <div id="status">Conectando ao servidor...</div>
+    <form id="form-usuario">
+      <label for="usuario">@ da conta que vai fazer a live</label>
+      <div><input id="usuario" placeholder="seu_usuario" autocomplete="off" spellcheck="false"><button>Salvar</button></div>
+    </form>
+  </div>
+  <div class="grade" id="grade"></div>
+  <div class="dicas">
+    <h3>Como colocar na live</h3>
+    0. Abra o <b>INICIAR-LIVE.bat</b> (pasta do projeto) e confira o @ acima. Pode abrir antes ou depois de começar a live.<br>
+    1. Abra o jogo e clique uma vez na tela (libera o som). Aperte <kbd>M</kbd> se estiver mudo e <kbd>F</kbd> para tela cheia.<br>
+    2. No <b>TikTok LIVE Studio</b>: adicione uma fonte de <b>Captura de janela</b> e escolha esta janela do navegador. Ative o áudio do sistema.<br>
+    3. Use a live em modo <b>vertical</b>. Os jogos são feitos em 1080×1920.<br>
+    4. Não minimize a janela do jogo (dá pra deixar outra janela por cima).<br><br>
+    Atalhos no jogo: <kbd>M</kbd> liga/desliga o som · <kbd>L</kbd> escudos desenhados/oficiais (corrida) · <kbd>T</kbd> painel de teste · <kbd>F</kbd> tela cheia · <kbd>G</kbd> volta para a galeria
+  </div>
+</main>
+<script src="/jogos.js"></script>
+<script>
+  const grade = document.getElementById('grade');
+  for (const j of JOGOS) {
+    const el = document.createElement(j.pronto ? 'a' : 'div');
+    el.className = 'jogo ' + (j.pronto ? 'pronto' : 'breve');
+    if (j.pronto) { el.href = `/jogos/${j.id}/`; el.style.color = 'inherit'; el.style.textDecoration = 'none'; }
+    el.innerHTML = `<div class="emoji">${j.emoji}</div><h2>${j.nome}</h2><p>${j.descricao}</p>
+      ${j.regras ? `<ul>${j.regras.map(r => `<li>${r}</li>`).join('')}</ul>` : ''}
+      <span class="selo">${j.pronto ? 'JOGAR' : 'EM BREVE'}</span>`;
+    grade.appendChild(el);
+  }
+  // Status da conexão com a live
+  const st = document.getElementById('status');
+  const campo = document.getElementById('usuario');
+  let ws;
+  function conectar() {
+    ws = new WebSocket(`ws://${location.host}`);
+    ws.onmessage = m => {
+      const ev = JSON.parse(m.data);
+      if (ev.tipo !== 'status') return;
+      if (ev.usuario && document.activeElement !== campo) campo.value = ev.usuario;
+      if (ev.modo === 'teste') st.textContent = '🧪 Modo teste (sem TikTok). Use a tecla T dentro do jogo para simular.';
+      else if (ev.conectado) st.textContent = `🟢 Conectado na live de @${ev.usuario}`;
+      else if (!ev.usuario) st.textContent = '🟡 Digite o @ da conta ao lado';
+      else st.textContent = `🟡 @${ev.usuario}: ${ev.msg || 'conectando...'}`;
+    };
+    ws.onclose = () => { st.textContent = '🔴 Servidor desligado. Abra o INICIAR-LIVE.bat'; setTimeout(conectar, 2000); };
+  }
+  document.getElementById('form-usuario').addEventListener('submit', e => {
+    e.preventDefault();
+    if (ws?.readyState === 1) ws.send(JSON.stringify({ tipo: 'definirUsuario', usuario: campo.value }));
+    campo.blur();
+  });
+  conectar();
+</script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Corrida dos Times</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
+  body { display: flex; align-items: center; justify-content: center; }
+  canvas { height: 100vh; aspect-ratio: 9 / 16; max-width: 100vw; display: block; }
+  #comecar { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    background: #000d; color: #fff; font: 700 28px system-ui; cursor: pointer; z-index: 50; text-align: center; gap: 10px; }
+  #comecar small { font-weight: 400; font-size: 16px; opacity: .7; }
+</style>
+</head>
+<body>
+<canvas id="tela"></canvas>
+<div id="comecar">🔊 Clique para começar<small>(libera o som do jogo)</small></div>
+<script src="/lib/matter.js"></script>
+<script src="/shared/som.js"></script>
+<script src="/shared/live.js"></script>
+<script src="/shared/times.js"></script>
+<script src="/shared/voz.js"></script>
+<script src="/shared/ranking.js"></script>
+<script src="corrida.js"></script>
+</body>
+</html>
