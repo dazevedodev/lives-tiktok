@@ -62,4 +62,4 @@ Atalhos: **M** som · **V** voz · **F** tela cheia · **G** volta para a galeri
 
 ---
 
-Feito por [Daniel Dazevedo](https://dazevedo.dev) · DAZEVEDO
+Feito por [Daniel D'Azevedo](https://dazevedo.dev) · DAZEVEDO
