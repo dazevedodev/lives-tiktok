@@ -15,7 +15,7 @@ import { visual, canvasTex, criarBoneco, pose, aplicar } from '/shared/boneco3d.
 // ---------- Configuração (pode mudar à vontade) ----------
 // lado 0 = primeira equipe do painel, lado 1 = segunda
 const CONFIG = {
-  meta: 100,                               // blocos até a coroa
+  meta: 500,                               // blocos até a coroa (quanto maior, mais longa a rodada)
   tempoResultado: 8,
   curtida: { lado: 1, blocos: 1 },          // por curtida (no máximo 5 por pacote)
   seguir: { lado: 0, blocos: 6 },
@@ -25,7 +25,7 @@ const CONFIG = {
     { nome: /ros[ae]/i, lado: 0, blocos: 10, icone: '🌹', rotulo: 'Rose' },
     { nome: /tik ?tok/i, lado: 1, blocos: 10, icone: '🎵', rotulo: 'TikTok' },
   ],
-  outroPresente: d => Math.min(60, 10 + d), // outros presentes: vão para a equipe de quem mandou
+  outroPresente: d => Math.min(200, 10 + d), // outros presentes: vão para a equipe de quem mandou
 };
 
 const LADOS = EQUIPES.slice(0, 2);
@@ -53,7 +53,7 @@ cena.background = canvasTex(4, 512, (g, w, h) => {
 });
 cena.fog = new THREE.Fog(0x1b0b45, 70, 180);
 
-const camera = new THREE.PerspectiveCamera(40, W / H, 0.1, 300);
+const camera = new THREE.PerspectiveCamera(40, W / H, 0.1, 600);
 const composer = new EffectComposer(renderer);
 composer.addPass(new RenderPass(cena, camera));
 composer.addPass(new UnrealBloomPass(new THREE.Vector2(W / 2, H / 2), 0.8, 0.5, 1.6));
@@ -328,7 +328,8 @@ function atualizar(dt, tempo) {
   const alto = Math.max(torres[0].topo, torres[1].topo), baixo = Math.min(torres[0].topo, torres[1].topo);
   const dif = alto - baixo;
   // a parte livre da tela (entre o placar e a parte de baixo do TikTok) é ~1/3 da altura
-  const dist = Math.min(60, Math.max(12.5, (dif + 2.8) * 4.3));
+  const dist = Math.min(150, Math.max(12.5, (dif + 2.8) * 4.3));
+  cena.fog.near = dist + 40; cena.fog.far = dist + 200;
   const foco = (alto + baixo) / 2 + 1.2;
   camAlvo.set(Math.sin(tempo * 0.2) * 0.5, foco + 1 + dist * 0.05, dist);
   camera.position.lerp(camAlvo, Math.min(1, dt * 3));
