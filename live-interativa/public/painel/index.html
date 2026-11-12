@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Live Interativa — Painel</title>
+<link rel="stylesheet" href="/fontes/fontes.css">
+<link rel="stylesheet" href="/painel/painel.css">
+</head>
+<body>
+<header class="topo">
+  <div class="logo"><span class="logo-icone">⚡</span><span>Live <b>Interativa</b></span></div>
+  <div class="topo-direita">
+    <span id="status" class="pilula">Conectando...</span>
+    <span id="espectadores" class="pilula suave" hidden></span>
+    <button id="abrir-tela" class="botao principal">📺 Abrir tela da live</button>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="lateral">
+    <section class="cartao">
+      <h3>No ar agora</h3>
+      <div class="previa"><img id="previa" alt=""><div id="previa-vazia">Abra a tela da live para ver a prévia aqui</div></div>
+      <div class="no-ar"><span id="no-ar-emoji">🎮</span><b id="no-ar-nome">—</b></div>
+      <button id="recomecar" class="botao largo">🔄 Recomeçar o jogo</button>
+    </section>
+    <section class="cartao">
+      <h3>Som</h3>
+      <label class="chave"><input type="checkbox" id="narradora"><span></span> Narradora (voz)</label>
+      <label class="campo">Volume <input type="range" id="volume" min="0" max="1" step="0.05"></label>
+      <p class="dica">Dica: no Edge a narradora usa a voz Thalita, que é bem mais natural.</p>
+    </section>
+  </aside>
+
+  <main>
+    <nav class="abas" id="abas">
+      <button data-aba="jogos" class="ativa">🎮 Jogos</button>
+      <button data-aba="equipes">👥 Equipes</button>
+      <button data-aba="marca">🎨 Minha marca</button>
+      <button data-aba="testar">🧪 Testar</button>
+      <button data-aba="conectar">🔗 Conectar à live</button>
+    </nav>
+
+    <section class="aba" id="aba-jogos">
+      <div id="nichos"></div>
+    </section>
+
+    <section class="aba" id="aba-equipes" hidden>
+      <div class="cartao">
+        <h2>Equipes</h2>
+        <p class="suave">O público escolhe a equipe comentando o número dela (ou o nome, ou o emoji). Comece por um modelo e mude o que quiser.</p>
+        <div class="modelos" id="modelos"></div>
+        <p class="aviso-modelo" id="aviso-modelo" hidden></p>
+        <div class="equipes" id="lista-equipes"></div>
+        <div class="acoes">
+          <button id="add-equipe" class="botao">➕ Adicionar equipe</button>
+          <button id="salvar-equipes" class="botao principal">Salvar equipes</button>
+        </div>
+        <p class="dica">Corrida usa as 4 primeiras · Cabo de Guerra usa as 2 primeiras · Cobrinha usa todas (até 6 na arena). Palavras extras: separe por vírgula.</p>
+      </div>
+    </section>
+
+    <section class="aba" id="aba-marca" hidden>
+      <div class="cartao">
+        <h2>Minha marca</h2>
+        <p class="suave">Aparece nos jogos (na espera entre as rodadas). Pode ser o nome da loja, do canal ou o seu @.</p>
+        <div class="form-marca">
+          <label class="campo">Nome<input id="marca-nome" maxlength="30" placeholder="Ex.: Loja da Ana"></label>
+          <label class="campo">Cor<input id="marca-cor" type="color"></label>
+          <label class="campo">Logo (PNG ou JPG)<input id="marca-logo" type="file" accept="image/png,image/jpeg,image/webp"></label>
+          <button id="tirar-logo" class="botao" hidden>Tirar logo</button>
+        </div>
+        <div class="etiqueta-previa"><span id="etiqueta"><img id="etiqueta-logo" alt="" hidden><span id="etiqueta-nome"></span></span></div>
+        <div class="acoes"><button id="salvar-marca" class="botao principal">Salvar marca</button></div>
+      </div>
+    </section>
+
+    <section class="aba" id="aba-testar" hidden>
+      <div class="cartao">
+        <h2>Testar sem estar ao vivo</h2>
+        <p class="suave" id="testar-info">Simule o público para ver o jogo funcionando. Tudo aparece na tela da live.</p>
+        <div id="testar-bloqueado" class="alerta" hidden>Você está conectado numa live de verdade. Para não enganar quem está assistindo, a simulação fica desligada durante a live.</div>
+        <div id="testar-controles">
+          <h4>Comentários</h4>
+          <div class="grade-botoes" id="botoes-equipes"></div>
+          <div class="grade-botoes">
+            <button class="botao" data-chat="A">A</button><button class="botao" data-chat="B">B</button>
+            <button class="botao" data-chat="C">C</button><button class="botao" data-chat="D">D</button>
+            <button class="botao" data-chat="oi">"oi"</button>
+          </div>
+          <form id="form-chat" class="linha"><input id="texto-chat" placeholder="Escreva um comentário de teste"><button class="botao">Enviar</button></form>
+          <h4>Curtidas e ações</h4>
+          <div class="grade-botoes">
+            <button class="botao" data-like="10">❤️ 10 curtidas</button>
+            <button class="botao" data-like="100">❤️ 100 curtidas</button>
+            <button class="botao" data-acao="follow">➕ Seguir</button>
+            <button class="botao" data-acao="share">↗️ Compartilhar</button>
+          </div>
+          <h4>Presentes</h4>
+          <div class="grade-botoes" id="botoes-presentes"></div>
+          <label class="chave grande"><input type="checkbox" id="plateia"><span></span> Plateia automática (público de teste)</label>
+        </div>
+      </div>
+    </section>
+
+    <section class="aba" id="aba-conectar" hidden>
+      <div class="cartao">
+        <h2>Conectar à live</h2>
+        <form id="form-usuario" class="linha">
+          <label class="campo cresce">@ da conta que vai fazer a live<input id="usuario" placeholder="seu_usuario" autocomplete="off" spellcheck="false"></label>
+          <button class="botao principal">Salvar</button>
+        </form>
+        <p class="suave" id="status-detalhe"></p>
+        <p class="dica">O sistema só lê os comentários, curtidas e presentes da sua live, como um espectador. Ele não pede sua senha e não posta nada na sua conta.</p>
+      </div>
+      <div class="cartao">
+        <h2>Como colocar o jogo na live</h2>
+        <ol class="passos">
+          <li>Clique em <b>📺 Abrir tela da live</b> (no topo). Uma janela em pé abre com o jogo.</li>
+          <li>Clique uma vez dentro dessa janela para liberar o som e a narradora.</li>
+          <li><b>TikTok LIVE Studio:</b> adicione a fonte <b>Captura de janela</b> e escolha a janela "Live Interativa — Tela da live". Ative o áudio do sistema.</li>
+          <li><b>OBS:</b> adicione uma <b>Fonte de navegador</b> com o endereço <code>http://127.0.0.1:4517/tela</code>, largura 1080 e altura 1920.</li>
+          <li>Faça a live em modo <b>vertical</b>. Não minimize a janela do jogo.</li>
+          <li>Troque de jogo aqui no painel quando quiser: a tela da live muda sozinha.</li>
+        </ol>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div id="toast" class="toast" hidden></div>
+<script src="/catalogo.js"></script>
+<script src="/painel/modelos.js"></script>
+<script src="/painel/painel.js"></script>
+</body>
+</html>
