@@ -1,0 +1,89 @@
+LIVE INTERATIVA
+Jogos interativos para live do TikTok: o público joga comentando, curtindo e mandando presentes.
+
+======================================================================
+COMO USAR NO DIA A DIA
+======================================================================
+
+1. Dê dois cliques em "Live Interativa.bat".
+   Abrem três janelas:
+   - uma janela preta (o motor). Deixe ela aberta enquanto a live durar.
+     Fechar essa janela desliga tudo.
+   - o PAINEL, onde você escolhe o jogo, a marca, as equipes e conecta na live.
+   - a TELA DA LIVE (janela em pé), que é o que o público vê.
+
+2. No painel, aba "Conectar": coloque o @ da conta que vai fazer a live
+   (só precisa uma vez, fica salvo).
+
+3. Comece a live no TikTok LIVE Studio (ou OBS) e adicione a janela
+   "Tela da live" como fonte (veja abaixo).
+
+4. Pronto. O painel mostra "Conectado" quando a live estiver no ar.
+   É só trocar de jogo pelo painel quando quiser: a tela troca sozinha.
+
+Quer testar sem estar ao vivo? Use "Live Interativa - Modo Teste.bat".
+Na aba "Testar" do painel dá para simular comentários, curtidas e presentes.
+
+======================================================================
+COLOCAR A TELA NA LIVE
+======================================================================
+
+TikTok LIVE Studio:
+  Adicionar fonte > Captura de janela > escolha "Live Interativa — Tela da live".
+  Use o layout em pé (vertical) e estique a fonte para ocupar a tela toda.
+
+OBS Studio:
+  Fontes > + > Captura de janela > escolha a janela "Tela da live".
+  Tela do OBS em 1080x1920 (vertical).
+
+Dica: se a janela da tela ficar atrás de outras, a captura continua funcionando.
+Não minimize a janela da tela.
+
+Se aparecer o botão "Clique aqui para ligar o som" na tela, clique uma vez.
+
+======================================================================
+OS JOGOS
+======================================================================
+
+Batalha de Equipes (o público escolhe uma equipe comentando o nome ou número):
+  - Corrida de Bolinhas
+  - Cobrinha Arena
+  - Cabo de Guerra
+
+Todos Juntos:
+  - Chefão: todo mundo junto para derrotar o chefão.
+
+Perguntas e Respostas:
+  - Quiz Relâmpago: o público responde A, B, C ou D.
+
+Presentes dão vantagens no jogo, e o ranking de apoiadores aparece na tela.
+A narradora fala sozinha (pode ser desligada no painel).
+
+======================================================================
+SEGURANÇA DA CONTA (importante)
+======================================================================
+
+- O programa NUNCA pede senha nem chave de transmissão. Só lê a live,
+  como um espectador. Ninguém deve pedir sua chave de transmissão.
+- A narradora nunca lê o que as pessoas escrevem, só frases prontas e o nome
+  (nomes ofensivos são trocados por "Participante").
+- O programa não pede presentes ao público. Siga as regras do TikTok:
+  não peça presentes em troca de nada, não prometa prêmio em dinheiro.
+- As fotos de perfil ficam desligadas.
+- O painel só abre neste computador (ninguém da internet acessa).
+
+======================================================================
+PROBLEMAS COMUNS
+======================================================================
+
+"Servidor desligado" na tela:
+  a janela preta foi fechada. Abra "Live Interativa.bat" de novo.
+
+Painel não conecta:
+  confira se o @ está certo e se a live já começou. Ele tenta de novo sozinho.
+
+Sem som na live:
+  no LIVE Studio/OBS, o som do PC precisa estar sendo capturado
+  (áudio da área de trabalho). Confira também o volume no painel.
+
+Suporte: fale com quem instalou o programa para você.

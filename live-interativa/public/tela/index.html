@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Live Interativa — Tela da live</title>
+<link rel="stylesheet" href="/fontes/fontes.css">
+<style>
+  html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
+  iframe { position: fixed; inset: 0; width: 100%; height: 100%; border: 0; transition: opacity .35s; }
+  iframe.saindo { opacity: 0; }
+  /* camada invisível por cima de tudo: qualquer clique na tela liga o som */
+  #ligar { position: fixed; inset: 0; z-index: 5; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 12vh; cursor: pointer; }
+  #ligar div { padding: 18px 28px; border-radius: 99px; background: linear-gradient(135deg, #ff2d6f, #7b2cff); color: #fff;
+    font: 600 22px Fredoka, system-ui; box-shadow: 0 8px 40px #000a; text-align: center; animation: pulsar 1.4s ease-in-out infinite; }
+  #ligar small { display: block; font-size: 14px; font-weight: 500; opacity: .85; }
+  @keyframes pulsar { 50% { transform: scale(1.05); } }
+  #aviso { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; color: #fff;
+    font: 600 22px Fredoka, system-ui; background: #000; text-align: center; padding: 20px; }
+</style>
+</head>
+<body>
+<iframe id="jogo" allow="autoplay; fullscreen"></iframe>
+<div id="ligar"><div>🔊 Clique aqui para ligar o som<small>só precisa uma vez, antes de começar a live</small></div></div>
+<div id="aviso">Servidor desligado.<br>Abra o atalho "Live Interativa" de novo.</div>
+<script src="/config.js"></script>
+<script src="/shared/som.js"></script>
+<script src="/shared/voz.js"></script>
+<script>
+  // O som e a narradora ficam aqui na tela (os jogos usam os daqui): um clique libera tudo.
+  window.Som = Som; window.Voz = Voz; // "const" não vira propriedade de window; os jogos procuram aqui
+  const ligar = document.getElementById('ligar');
+  function ligarSom() {
+    Som.iniciar();
+    speechSynthesis.speak(new SpeechSynthesisUtterance(' ')); // destrava a voz no navegador
+    ligar.remove();
+  }
+  ligar.addEventListener('pointerdown', ligarSom);
+  // Aberta pelo atalho, o navegador já deixa tocar som: tenta ligar sozinho e some com o aviso.
+  Som.iniciar();
+  setTimeout(() => { if (Som.ativo) ligar.remove(); }, 400);
+
+  // Mostra o jogo escolhido no painel. Troca sozinho quando o painel muda o jogo.
+  const quadro = document.getElementById('jogo');
+  const aviso = document.getElementById('aviso');
+  let atual = null;
+
+  function mostrar(jogo, forcar = false) {
+    if (!jogo || (jogo === atual && !forcar)) return;
+    atual = jogo;
+    quadro.classList.add('saindo');
+    setTimeout(() => {
+      quadro.src = `/jogos/${jogo}/?t=${Date.now()}`;
+      quadro.onload = () => quadro.classList.remove('saindo');
+    }, 350);
+  }
+
+  // Prévia para o painel: uma foto pequena da tela a cada meio segundo, só enquanto o painel pede.
+  const canal = new BroadcastChannel('live-interativa');
+  let pediuEm = 0;
+  canal.onmessage = m => { if (m.data === 'previa?') pediuEm = Date.now(); };
+  const foto = document.createElement('canvas');
+  foto.width = 270; foto.height = 480;
+  const g = foto.getContext('2d');
+  setInterval(() => {
+    if (Date.now() - pediuEm > 4000) return;
+    try {
+      const doc = quadro.contentDocument;
+      g.fillStyle = '#000'; g.fillRect(0, 0, 270, 480);
+      for (const c of doc.querySelectorAll('canvas')) if (c.width) g.drawImage(c, 0, 0, 270, 480);
+      canal.postMessage({ previa: foto.toDataURL('image/jpeg', 0.6), jogo: atual });
+    } catch { /* jogo ainda carregando */ }
+  }, 500);
+
+  function conectar() {
+    const ws = new WebSocket(`ws://${location.host}`);
+    ws.onopen = () => { aviso.style.display = 'none'; };
+    ws.onmessage = m => {
+      const ev = JSON.parse(m.data);
+      if (ev.tipo === 'config') { Som.volume(ev.config.volume); Voz.ligada = ev.config.narradora; }
+      if (ev.tipo === 'config' && !atual) mostrar(ev.config.jogo);
+      if (ev.tipo === 'config' && ev.recarregar) mostrar(atual, true);
+      if (ev.tipo === 'trocarJogo') mostrar(ev.jogo);
+      if (ev.tipo === 'comando' && ev.acao === 'recarregar') mostrar(atual, true);
+    };
+    ws.onclose = () => { aviso.style.display = 'flex'; setTimeout(conectar, 2000); };
+  }
+  conectar();
+  addEventListener('keydown', e => {
+    if (e.key === 'f' || e.key === 'F') document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen();
+  });
+</script>
+</body>
+</html>
